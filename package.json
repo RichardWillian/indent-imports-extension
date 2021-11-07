@@ -10,13 +10,13 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:indent-imports"
+		"onCommand:extension.indent-imports"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "indent-imports",
+				"command": "extension.indent-imports",
 				"title": "Indent Imports"
 			}
 		]
