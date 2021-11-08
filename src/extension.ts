@@ -1,25 +1,11 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import Typescript from './code-languages/typescript';
+import { CodeLanguage } from './code-language/code-language';
 import './shared/array.extenstion';
 
-/*
-import { novo } from 'alecrim12345';
-import { novo } from 'alecrim123';
-import { novo } from 'alecrim1';
-import { novo } from 'alecrim123456';
-import { novo } from 'alecrim1234';
-import { novo } from 'alecrim1234567';
-import { novo } from 'alecrim12';
-
-export default class Teste {
-
-}
-
-*/
-
 export function activate(context: vscode.ExtensionContext) {
+
 	const disposable = vscode.commands.registerCommand('extension.indent-imports', () => {
 
 		const editor = vscode.window.activeTextEditor;
@@ -32,14 +18,24 @@ export function activate(context: vscode.ExtensionContext) {
 		const lineCount = document.lineCount;
 		const importsForIndentation: string[] = [];
 
+		const codeLanguage = CodeLanguage.getCodeLanguage(document.languageId);
+
+		if (!codeLanguage)
+			return;
+
 		for (let i = 0; i < lineCount; i++) {
 			const currentLine = document.lineAt(i);
 			const text = currentLine.text;
 
-			if (Typescript.checkIfIsAnImport(text))
+			if (codeLanguage.checkIfIsAnImport(text))
 				continue;
 
 			importsForIndentation.push(text);
+		}
+
+		if (importsForIndentation.length === 0) {
+			vscode.window.showInformationMessage('There are no elements to identify. Check the code language of your current file.');
+			return;
 		}
 
 		importsForIndentation.orderByLength();
