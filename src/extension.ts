@@ -1,8 +1,6 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { CodeLanguage } from './code-language/code-language';
 import './shared/array.extenstion';
+import { CodeLanguage } from './code-language/code-language';
 
 export function activate(context: vscode.ExtensionContext) {
 
