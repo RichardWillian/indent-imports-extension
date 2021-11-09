@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import './shared/array.extenstion';
+import Line from './model/line.model';
 import { CodeLanguage } from './code-language/code-language';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -14,7 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
 		const document = editor.document;
 
 		const lineCount = document.lineCount;
-		const importsForIndentation: string[] = [];
+		const importsForIndentation: Line[] = [];
 
 		const codeLanguage = CodeLanguage.getCodeLanguage(document.languageId);
 
@@ -28,19 +29,21 @@ export function activate(context: vscode.ExtensionContext) {
 			if (codeLanguage.checkIfIsAnImport(text))
 				continue;
 
-			importsForIndentation.push(text);
+			importsForIndentation.push(new Line(text, currentLine.lineNumber));
 		}
+
+		console.log(importsForIndentation);
 
 		if (importsForIndentation.length === 0) {
 			vscode.window.showInformationMessage('There are no elements to identify. Check the code language of your current file.');
 			return;
 		}
 
-		importsForIndentation.orderByLength();
+		importsForIndentation.map(x => x.text);
 
 		const selection = defineSelectionOfImports(importsForIndentation, editor);
 
-		const result = importsForIndentation.join('\n');
+		const result = importsForIndentation.map(x => x.text).orderByLength().join('\n');
 
 		editor.edit(editBuilder => {
 			editBuilder.replace(selection, result);
@@ -50,14 +53,18 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposable);
 }
 
-function defineSelectionOfImports(importsForIndentation: string[], editor: vscode.TextEditor) {
-	const start = new vscode.Position(0, 0);
+function defineSelectionOfImports(importsForIndentation: Line[], editor: vscode.TextEditor) {
+	const firstLine = importsForIndentation[0];
+	const start = new vscode.Position(firstLine.lineNumber, 0);
+
 	const lastIndex = importsForIndentation.length - 1;
 	const lastLine = importsForIndentation[lastIndex];
-	const end = new vscode.Position(lastIndex, lastLine.length);
-	const selection = new vscode.Selection(start, end);
 
+	const end = new vscode.Position(lastLine.lineNumber, lastLine.text.length);
+
+	const selection = new vscode.Selection(start, end);
 	editor.selection = selection;
+	
 	return selection;
 }
 
