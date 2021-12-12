@@ -12,7 +12,7 @@ I believe you use a lot of "shift + alt + f" to indent your code daily, so for e
 
 ```json
 {
-    "key": "shift+alt+f",
+    "key": "shift+alt+d",
     "command": "extension.indent-imports",
     "when": "editorTextFocus"
 }
