@@ -2,7 +2,7 @@
 	"name": "import-indentation",
 	"displayName": "Import Indentation",
 	"description": "Extension created for all those who also hate to keep pushing back 'imports'",
-	"version": "1.0.0",
+	"version": "1.0.2",
 	"engines": {
 		"vscode": "^1.61.0"
 	},
